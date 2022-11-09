@@ -30,14 +30,18 @@ async function run(){
             const service = await serviceCollection.findOne(query)
             res.send(service)
          })
+         app.post('/services', async(req, res) =>{
+            const service = req.body;
+            const result = await serviceCollection.insertOne(service)
+            res.send(result)
+         }) 
 
          //review services
          app.get('/reviews', async(req, res) => {
             let query = {}
-            if(req.query.email && req.query.id ){
+            if(req.query.email){
                 query = {
-                    email: req.query.email,
-                    id: req.query.id
+                    email: req.query.email
                 }
             }
             const cursor = reviewCollection.find(query);
@@ -45,6 +49,13 @@ async function run(){
             res.send(reviews)
          })
 
+         app.get('/reviews/:id', async( req, res) =>{
+            const id = req.params.service
+            const query = {service: service}
+            const result = await reviewCollection.findOne(query)
+            res.send(result)
+         })
+          
          app.post('/reviews', async(req, res) =>{
             const review = req.body;
             const result = await reviewCollection.insertOne(review)
